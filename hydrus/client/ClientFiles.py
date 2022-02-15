@@ -189,7 +189,7 @@ class ClientFilesManager( object ):
         self._controller.sub( self, 'shutdown', 'shutdown' )
         
     
-    def _AddFile( self, hash, mime, source_path ):
+    def _AddFile( self, hash, mime, source_path, use_symlinks ):
         
         dest_path = self._GenerateExpectedFilePath( hash, mime )
         
@@ -197,8 +197,7 @@ class ClientFilesManager( object ):
             
             HydrusData.ShowText( 'Adding file to client file structure: from {} to {}'.format( source_path, dest_path ) )
             
-        
-        successful = HydrusPaths.MirrorFile( source_path, dest_path )
+        successful = HydrusPaths.MirrorFile( source_path, dest_path, use_symlinks )
         
         if not successful:
             
@@ -769,11 +768,11 @@ class ClientFilesManager( object ):
             
         
     
-    def AddFile( self, hash, mime, source_path, thumbnail_bytes = None ):
+    def AddFile( self, hash, mime, source_path, thumbnail_bytes = None, use_symlinks = False ):
         
         with self._rwlock.write:
             
-            self._AddFile( hash, mime, source_path )
+            self._AddFile( hash, mime, source_path, use_symlinks )
             
             if thumbnail_bytes is not None:
                 

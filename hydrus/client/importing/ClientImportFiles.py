@@ -134,7 +134,7 @@ class FileImportJob( object ):
         self._file_import_options.CheckFileIsValid( size, mime, width, height )
         
     
-    def DoWork( self, status_hook = None ) -> FileImportStatus:
+    def DoWork( self, status_hook = None, use_symlinks = False ) -> FileImportStatus:
         
         if HG.file_import_report_mode:
             
@@ -171,9 +171,8 @@ class FileImportJob( object ):
                 if status_hook is not None:
                     
                     status_hook( 'copying file into file storage' )
-                    
-                
-                HG.client_controller.client_files_manager.AddFile( hash, mime, self._temp_path, thumbnail_bytes = self._thumbnail_bytes )
+                          
+                HG.client_controller.client_files_manager.AddFile( hash, mime, self._temp_path, thumbnail_bytes = self._thumbnail_bytes, use_symlinks=use_symlinks )
                 
                 if status_hook is not None:
                     

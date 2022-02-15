@@ -776,11 +776,11 @@ class FileSeed( HydrusSerialisable.SerialisableBase ):
         return self.GetHash() is not None
         
     
-    def Import( self, temp_path: str, file_import_options: FileImportOptions.FileImportOptions, status_hook = None ):
+    def Import( self, temp_path: str, file_import_options: FileImportOptions.FileImportOptions, status_hook = None, use_symlinks = False ):
         
         file_import_job = ClientImportFiles.FileImportJob( temp_path, file_import_options )
         
-        file_import_status = file_import_job.DoWork( status_hook = status_hook )
+        file_import_status = file_import_job.DoWork( status_hook = status_hook, use_symlinks=use_symlinks )
         
         self.SetStatus( file_import_status.status, note = file_import_status.note )
         self.SetHash( file_import_status.hash )
@@ -834,8 +834,14 @@ class FileSeed( HydrusSerialisable.SerialisableBase ):
                         raise HydrusExceptions.VetoException( 'Not in allowed mimes!' )
                         
                     
-                
-                self.Import( temp_path, file_import_options, status_hook = status_hook )
+                path_to_import = temp_path
+
+                use_symlinks = HG.client_controller.new_options.GetBoolean( 'symlink_import' )
+
+                if use_symlinks:
+                    path_to_import = path
+
+                self.Import( path_to_import, file_import_options, status_hook = status_hook, use_symlinks=use_symlinks )
                 
             finally:
                 

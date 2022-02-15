@@ -1596,6 +1596,8 @@ class ManageOptionsPanel( ClientGUIScrolledPanels.ManagePanel ):
             
             default_fios = ClientGUICommon.StaticBox( self, 'default file import options' )
             
+            self._misc_panel = ClientGUICommon.StaticBox( self, 'misc' )
+
             show_downloader_options = True
             
             quiet_file_import_options = self._new_options.GetDefaultFileImportOptions( 'quiet' )
@@ -1606,13 +1608,20 @@ class ManageOptionsPanel( ClientGUIScrolledPanels.ManagePanel ):
             
             self._loud_fios = ClientGUIImport.FileImportOptionsButton( default_fios, loud_file_import_options, show_downloader_options )
             
+            self._symlink_import = QW.QCheckBox( self._misc_panel )
+            self._symlink_import.setToolTip( 'When importing files import using symlinks instead of copying the files' )
+
+            self._symlink_import.setChecked( self._new_options.GetBoolean( 'symlink_import' ) )
+
             #
             
             rows = []
             
             rows.append( ( 'For \'quiet\' import contexts like import folders and subscriptions:', self._quiet_fios ) )
             rows.append( ( 'For import contexts that work on pages:', self._loud_fios ) )
-            
+
+            rows.append( ( 'EXPERIMENTAL: Import by symlink instead of file copy: ', self._symlink_import ) )
+
             gridbox = ClientGUICommon.WrapInGrid( default_fios, rows )
             
             default_fios.Add( gridbox, CC.FLAGS_EXPAND_SIZER_PERPENDICULAR )
@@ -1631,6 +1640,8 @@ class ManageOptionsPanel( ClientGUIScrolledPanels.ManagePanel ):
             
             self._new_options.SetDefaultFileImportOptions( 'quiet', self._quiet_fios.GetValue() )
             self._new_options.SetDefaultFileImportOptions( 'loud', self._loud_fios.GetValue() )
+            
+            self._new_options.SetBoolean('symlink_import', self._symlink_import.isChecked() )
             
         
     

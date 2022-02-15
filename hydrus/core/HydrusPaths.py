@@ -570,7 +570,7 @@ def MergeTree( source, dest, text_update_hook = None ):
             
         
     
-def MirrorFile( source, dest ):
+def MirrorFile( source, dest, use_symlink=False ):
     
     if not PathsHaveSameSizeAndDate( source, dest ):
         
@@ -578,7 +578,14 @@ def MirrorFile( source, dest ):
             
             TryToMakeFileWriteable( dest )
             
-            safe_copy2( source, dest )
+            if use_symlink:
+                if not os.path.exists( dest ):
+                    os.symlink(source, dest)
+                else:
+                    HydrusData.ShowText( 'File ' + dest + ' already exists, falling back to copying' )
+                    safe_copy2( source, dest )
+            else:
+                safe_copy2( source, dest )
             
         except Exception as e:
             

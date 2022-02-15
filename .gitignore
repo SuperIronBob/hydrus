@@ -37,6 +37,9 @@ local.properties
 logs/
 crash.log
 
+# venv stuff
+.venv/
+
 # hydev note: updating this to ignore user's db files
 # I nonetheless recommend you use the -d switch to put your db somewhere else if you run and update from git source
 db/*.db
